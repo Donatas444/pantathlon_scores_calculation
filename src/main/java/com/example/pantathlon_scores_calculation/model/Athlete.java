@@ -4,17 +4,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Athlete {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,10 +31,9 @@ public class Athlete {
     private int runningMin;
     private int runningSec;
     private int runningMilSec;
-    private LocalTime timeToAdd;
+    private LocalTime runningTime;
+    private LocalTime swimmingTime;
+    private LocalTime penaltyTime;
     private LocalTime finalScore;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "athlete_place", joinColumns = @JoinColumn(name = "athlete_id"), inverseJoinColumns = @JoinColumn(name = "place_id"))
-    private Set<Place> places = new HashSet<>();
+    private int place;
 }

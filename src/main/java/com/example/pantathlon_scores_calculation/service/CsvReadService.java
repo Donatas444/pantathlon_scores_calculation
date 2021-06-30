@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CsvReadService {
-
     public String fullName;
     public int fencingVictories;
     public int swimmingMin;
@@ -28,7 +28,11 @@ public class CsvReadService {
     public int runningMilSec;
     @Autowired
     AthleteRepository athleteRepository;
+    @Autowired
+    EventsScoresCalculationService eventsScoresCalculationService;
     List<Athlete> athleteList = new ArrayList<>();
+    private LocalTime runningTime;
+    private LocalTime swimmingTime;
 
     public void addAthlete() {
         Athlete athlete = new Athlete();
@@ -45,6 +49,8 @@ public class CsvReadService {
         athlete.setRunningMin(runningMin);
         athlete.setRunningSec(runningSec);
         athlete.setRunningMilSec(runningMilSec);
+        athlete.setRunningTime(runningTime);
+        athlete.setSwimmingTime(swimmingTime);
         athleteRepository.save(athlete);
     }
 
@@ -54,19 +60,21 @@ public class CsvReadService {
             while ((line = bufferedReader.readLine()) != null) {
                 String[] values = line.split(",");
                 fullName = values[0];
-               fencingVictories = parseStringToInt(values[1].trim());
+                fencingVictories = parseStringToInt(values[1].trim());
                 String[] swimmingTimeSplit = values[2].split("[:.]");
-                swimmingMin = Integer.parseInt(swimmingTimeSplit[0]);
-                swimmingSec = Integer.parseInt(swimmingTimeSplit[1]);
-                swimmingMilSec = Integer.parseInt(swimmingTimeSplit[2]);
+                swimmingMin = parseStringToInt(swimmingTimeSplit[0]);
+                swimmingSec = parseStringToInt(swimmingTimeSplit[1]);
+                swimmingMilSec = parseStringToInt(swimmingTimeSplit[2]);
+                swimmingTime = eventsScoresCalculationService.convertIntToTime(swimmingMin, swimmingSec, swimmingMilSec);
                 ridingKnockDown = parseStringToInt(values[3].trim());
                 ridingRefusal = parseStringToInt(values[4].trim());
                 ridingDisobedienceLeading = parseStringToInt(values[5].trim());
                 shootingScore = parseStringToInt(values[6].trim());
                 String[] runningTimeSplit = values[7].split("[:.]");
-                runningMin = Integer.parseInt(runningTimeSplit[0]);
-                runningSec = Integer.parseInt(runningTimeSplit[1]);
-                runningMilSec = Integer.parseInt(runningTimeSplit[2]);
+                runningMin = parseStringToInt(runningTimeSplit[0]);
+                runningSec = parseStringToInt(runningTimeSplit[1]);
+                runningMilSec = parseStringToInt(runningTimeSplit[2]);
+                runningTime = eventsScoresCalculationService.convertIntToTime(runningMin, runningSec, runningMilSec);
                 addAthlete();
             }
         } catch (IOException e) {
@@ -74,6 +82,7 @@ public class CsvReadService {
         }
         return athleteList;
     }
+
     public int parseStringToInt(String string) {
         return Integer.parseInt(string);
     }

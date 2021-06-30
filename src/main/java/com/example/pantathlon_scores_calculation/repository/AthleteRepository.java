@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AthleteRepository extends JpaRepository<Athlete, Long> {
-
     @Query(value = "SELECT MAX(common_score) FROM Athlete", nativeQuery = true)
     int findMaxCommonScore();
 }

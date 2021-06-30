@@ -1,12 +1,10 @@
 package com.example.pantathlon_scores_calculation.controller;
 
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import com.example.pantathlon_scores_calculation.model.Athlete;
-import com.example.pantathlon_scores_calculation.service.CsvReadService;
-import com.example.pantathlon_scores_calculation.service.OverallScoreCalculationService;
+import com.example.pantathlon_scores_calculation.service.FinalCalculation;
 
 import java.util.ArrayList;
 
@@ -25,21 +23,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 @ExtendWith(SpringExtension.class)
 public class ScoresControllerTest {
     @MockBean
-    private CsvReadService csvReadService;
-
-    @MockBean
-    private OverallScoreCalculationService overallScoreCalculationService;
+    private FinalCalculation finalCalculation;
 
     @Autowired
     private ScoresController scoresController;
 
     @Test
-    public void testTest() throws Exception {
-        when(this.overallScoreCalculationService.finalScoreCount()).thenReturn(new ArrayList<>());
-        doNothing().when(this.overallScoreCalculationService).addMinutesToConcludingEvent();
-        when(this.overallScoreCalculationService.findMaxCommonPoints()).thenReturn(1);
-        when(this.csvReadService.readCsvFile(anyString())).thenReturn(new ArrayList<>());
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/test");
+    public void testScores() throws Exception {
+        when(this.finalCalculation.listOfFinalScores(anyString())).thenReturn(new ArrayList<>());
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/scores");
         MockMvcBuilders.standaloneSetup(this.scoresController)
                 .build()
                 .perform(requestBuilder)

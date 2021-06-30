@@ -9,8 +9,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
-public class ScoresCalculationService {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:s");
+public class EventsScoresCalculationService {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:m:s:[S]");
 
     public int countShootingScore(int shootingScore) {
         int result;
@@ -26,17 +26,19 @@ public class ScoresCalculationService {
         return result;
     }
 
-    public LocalTime convertIntToTime(int min, int sec) {
-        String stringTime = "00:".concat(String.valueOf(min)).concat(":").concat(String.valueOf(sec));
-
+    public LocalTime convertIntToTime(int min, int sec, int milSec) {
+        String stringTime = "00:".concat(String.valueOf(min)).concat(":")
+                .concat(String.valueOf(sec)
+                        .concat(":")
+                        .concat(String.valueOf(milSec)));
         LocalTime time = LocalTime.parse(stringTime, formatter);
         return time;
     }
 
-    public long countSwimmingScore(int minutes, int seconds) {
+    public long countSwimmingScore(int minutes, int seconds, int milSec) {
         long result;
-        LocalTime swimmingTime = convertIntToTime(minutes, seconds);
-        LocalTime markOf1000Points = LocalTime.parse("00:02:30", formatter);
+        LocalTime swimmingTime = convertIntToTime(minutes, seconds, milSec);
+        LocalTime markOf1000Points = LocalTime.parse("00:02:30:0", formatter);
         int value = swimmingTime.compareTo(markOf1000Points);
         if (value > 0) {
             long duration = ChronoUnit.SECONDS.between(markOf1000Points, swimmingTime);
@@ -72,14 +74,14 @@ public class ScoresCalculationService {
 
     public int countRidingScore(int ridingKnockDown, int ridingRefusal, int ridingDisobedienceLeading) {
         int result;
-        int sumOfRidingErrors = knockDownsCounter(ridingKnockDown)
-                + ridingRefusal(ridingRefusal)
-                + ridingDisobedienceLeading(ridingDisobedienceLeading);
+        int sumOfRidingErrors = ridingKnockDownsCounter(ridingKnockDown)
+                + ridingRefusalCounter(ridingRefusal)
+                + ridingDisobedienceLeadingCounter(ridingDisobedienceLeading);
         result = 1200 - sumOfRidingErrors;
         return result;
     }
 
-    public int knockDownsCounter(int ridingKnockDown) {
+    public int ridingKnockDownsCounter(int ridingKnockDown) {
         int result = 0;
         if (ridingKnockDown != 0) {
             result = ridingKnockDown * 28;
@@ -89,7 +91,7 @@ public class ScoresCalculationService {
         return result;
     }
 
-    public int ridingRefusal(int ridingRefusal) {
+    public int ridingRefusalCounter(int ridingRefusal) {
         int result = 0;
         if (ridingRefusal != 0) {
             result = ridingRefusal * 40;
@@ -99,7 +101,7 @@ public class ScoresCalculationService {
         return result;
     }
 
-    public int ridingDisobedienceLeading(int ridingDisobedienceLeading) {
+    public int ridingDisobedienceLeadingCounter(int ridingDisobedienceLeading) {
         int result = 0;
         if (ridingDisobedienceLeading != 0) {
             result = ridingDisobedienceLeading * 60;
