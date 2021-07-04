@@ -82,32 +82,14 @@ public class EventsScoresCalculationService {
     }
 
     public int ridingKnockDownsCounter(int ridingKnockDown) {
-        int result = 0;
-        if (ridingKnockDown != 0) {
-            result = ridingKnockDown * 28;
-        } else {
-            return result;
-        }
-        return result;
+            return ridingKnockDown * 28;
     }
 
     public int ridingRefusalCounter(int ridingRefusal) {
-        int result = 0;
-        if (ridingRefusal != 0) {
-            result = ridingRefusal * 40;
-        } else {
-            return result;
-        }
-        return result;
+            return ridingRefusal * 40;
     }
 
     public int ridingDisobedienceLeadingCounter(int ridingDisobedienceLeading) {
-        int result = 0;
-        if (ridingDisobedienceLeading != 0) {
-            result = ridingDisobedienceLeading * 60;
-        } else {
-            return result;
-        }
-        return result;
+            return ridingDisobedienceLeading * 60;
     }
 }
