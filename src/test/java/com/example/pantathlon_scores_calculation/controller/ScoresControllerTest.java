@@ -1,6 +1,5 @@
 package com.example.pantathlon_scores_calculation.controller;
 
-import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.when;
 
 import com.example.pantathlon_scores_calculation.model.Athlete;
@@ -30,7 +29,7 @@ public class ScoresControllerTest {
 
     @Test
     public void testScores() throws Exception {
-        when(this.finalCalculation.listOfFinalScores(anyString())).thenReturn(new ArrayList<>());
+        when(this.finalCalculation.listOfFinalScores()).thenReturn(new ArrayList<>());
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/scores");
         MockMvcBuilders.standaloneSetup(this.scoresController)
                 .build()

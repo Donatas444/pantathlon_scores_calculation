@@ -1,6 +1,7 @@
 package com.example.pantathlon_scores_calculation.service;
 
 import com.example.pantathlon_scores_calculation.model.Athlete;
+import com.example.pantathlon_scores_calculation.repository.AthleteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +13,20 @@ public class FinalCalculation {
     CsvReadService csvReadService;
     @Autowired
     OverallScoreCalculationService overallScoreCalculationService;
+    @Autowired
+    AthleteRepository athleteRepository;
 
-    public List<Athlete> listOfFinalScores(String filePath) {
-        csvReadService.readCsvFile(filePath);
-        overallScoreCalculationService.calculateMaxCommonPoints();
-        overallScoreCalculationService.addMinutesToConcludingEvent();
-        overallScoreCalculationService.finalScoreCount();
+    public List<Athlete> listOfFinalScores() {
+        if (athleteRepository.findAll().isEmpty()) {
+            csvReadService.readCsvFile();
+            overallScoreCalculationService.calculateMaxCommonPoints();
+            overallScoreCalculationService.addMinutesToConcludingEvent();
+            overallScoreCalculationService.finalScoreCount();
+        } else {
+            overallScoreCalculationService.calculateMaxCommonPoints();
+            overallScoreCalculationService.addMinutesToConcludingEvent();
+            overallScoreCalculationService.finalScoreCount();
+        }
         return overallScoreCalculationService.calculateAthletesPlaces();
     }
 }

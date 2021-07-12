@@ -11,17 +11,16 @@ import java.util.List;
 /**
  * Used facade design pattern:
  * All needed calculation methods' implementation combined by one method "listOfFinalScores".
- * This finally is sent to @Controller.
+ * This finally is sent to @RestController.
  */
 
 @RestController
 public class ScoresController {
     @Autowired
     FinalCalculation finalCalculation;
-    String filePath = "C:\\Users\\Donatas\\Downloads\\Task\\Task\\Athlete_Results.csv";
 
     @GetMapping("/scores")
     public List<Athlete> scores() {
-        return finalCalculation.listOfFinalScores(filePath);
+        return finalCalculation.listOfFinalScores();
     }
 }

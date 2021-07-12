@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -21,7 +23,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ContextConfiguration(classes = {AthleteService.class})
+@ContextConfiguration(classes = {AthleteService.class, EventsScoresCalculationService.class})
 @ExtendWith(SpringExtension.class)
 public class AthleteServiceTest {
     @MockBean
@@ -29,6 +31,41 @@ public class AthleteServiceTest {
 
     @Autowired
     private AthleteService athleteService;
+
+    @MockBean
+    private EventsScoresCalculationService eventsScoresCalculationService;
+
+    @Test
+    public void testAddAthlete() {
+        when(this.eventsScoresCalculationService.convertIntToTime(anyInt(), anyInt(), anyInt()))
+                .thenReturn(LocalTime.of(1, 1));
+
+        Athlete athlete = new Athlete();
+        athlete.setSwimmingTime(LocalTime.of(1, 1));
+        athlete.setFullName("Dr Jane Doe");
+        athlete.setRidingKnockDown(1);
+        athlete.setCommonScore(3);
+        athlete.setFinalScore(LocalTime.of(1, 1));
+        athlete.setRunningMin(1);
+        athlete.setFencingVictories(1);
+        athlete.setRunningSec(1);
+        athlete.setShootingScore(3);
+        athlete.setSwimmingMilSec(1);
+        athlete.setRunningTime(LocalTime.of(1, 1));
+        athlete.setRunningMilSec(1);
+        athlete.setId(123L);
+        athlete.setPlace(1);
+        athlete.setSwimmingSec(1);
+        athlete.setPenaltyTime(LocalTime.of(1, 1));
+        athlete.setRidingRefusal(1);
+        athlete.setSwimmingMin(1);
+        athlete.setRidingDisobedienceLeading(1);
+        when(this.athleteRepository.save(any())).thenReturn(athlete);
+        this.athleteService.addAthlete(new Athlete());
+        verify(this.eventsScoresCalculationService, times(2)).convertIntToTime(anyInt(), anyInt(), anyInt());
+        verify(this.athleteRepository).save(any());
+        assertTrue(this.athleteService.getAllAthletes().isEmpty());
+    }
 
     @Test
     public void testGetAllAthletes() {
@@ -45,7 +82,7 @@ public class AthleteServiceTest {
     public void testGetAthleteById() {
         Athlete athlete = new Athlete();
         athlete.setSwimmingTime(LocalTime.of(1, 1));
-        athlete.setFullName("Ponas Misteris");
+        athlete.setFullName("Dr Jane Doe");
         athlete.setRidingKnockDown(1);
         athlete.setCommonScore(3);
         athlete.setFinalScore(LocalTime.of(1, 1));
@@ -73,7 +110,7 @@ public class AthleteServiceTest {
     public void testEditAthlete() {
         Athlete athlete = new Athlete();
         athlete.setSwimmingTime(LocalTime.of(1, 1));
-        athlete.setFullName("Ponas Misteris");
+        athlete.setFullName("Dr Jane Doe");
         athlete.setRidingKnockDown(1);
         athlete.setCommonScore(3);
         athlete.setFinalScore(LocalTime.of(1, 1));
