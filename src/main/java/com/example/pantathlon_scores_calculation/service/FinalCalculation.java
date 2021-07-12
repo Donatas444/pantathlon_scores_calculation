@@ -19,14 +19,10 @@ public class FinalCalculation {
     public List<Athlete> listOfFinalScores() {
         if (athleteRepository.findAll().isEmpty()) {
             csvReadService.readCsvFile();
-            overallScoreCalculationService.calculateMaxCommonPoints();
-            overallScoreCalculationService.addMinutesToConcludingEvent();
-            overallScoreCalculationService.finalScoreCount();
-        } else {
-            overallScoreCalculationService.calculateMaxCommonPoints();
-            overallScoreCalculationService.addMinutesToConcludingEvent();
-            overallScoreCalculationService.finalScoreCount();
         }
+        overallScoreCalculationService.calculateMaxCommonPoints();
+        overallScoreCalculationService.addMinutesToConcludingEvent();
+        overallScoreCalculationService.finalScoreCount();
         return overallScoreCalculationService.calculateAthletesPlaces();
     }
 }
