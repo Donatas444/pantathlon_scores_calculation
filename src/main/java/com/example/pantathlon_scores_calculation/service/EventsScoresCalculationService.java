@@ -31,8 +31,7 @@ public class EventsScoresCalculationService {
                 .concat(String.valueOf(sec)
                         .concat(":")
                         .concat(String.valueOf(milSec)));
-        LocalTime time = LocalTime.parse(stringTime, formatter);
-        return time;
+        return LocalTime.parse(stringTime, formatter);
     }
 
     public long countSwimmingScore(int minutes, int seconds, int milSec) {
@@ -60,7 +59,7 @@ public class EventsScoresCalculationService {
         int pointsOf70Percent = (int) Math.ceil((double) ((athleteList.size() - 1) * 70) / 100);
         if (victories == 0) {
             result = 1000 - ((athleteList.size() - 1) * 40);
-        } else if (percentOfVictories < 70 && victories != 0) {
+        } else if (percentOfVictories < 70) {
             int pointsToMinus = (pointsOf70Percent - victories) * 40;
             result = 1000 - pointsToMinus;
         } else if (percentOfVictories > 70) {
